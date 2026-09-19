@@ -1,0 +1,129 @@
+abstract class MediaItem {
+  String id;
+  String title;
+  double price;
+
+  MediaItem({
+    required this.id,
+    required this.title,
+    required this.price,
+  });
+
+  String getDetails();
+}
+
+mixin Downloadable {
+  void download(String title) {
+    print('Downloading: $title...');
+  }
+}
+
+class Audiobook extends MediaItem with Downloadable {
+  double durationHours;
+  String narrator;
+
+  Audiobook({
+    required String id,
+    required String title,
+    required double price,
+    required this.durationHours,
+    required this.narrator,
+  }) : super(id: id, title: title, price: price);
+
+  @override
+  String getDetails() {
+    return 'Audiobook: $title | Narrator: $narrator | Duration: $durationHours hrs | Price: \$$price';
+  }
+}
+
+class EBook extends MediaItem with Downloadable {
+  double fileSizeMB;
+  String author;
+
+  EBook({
+    required String id,
+    required String title,
+    required double price,
+    required this.fileSizeMB,
+    required this.author,
+  }) : super(id: id, title: title, price: price);
+
+  @override
+  String getDetails() {
+    return 'EBook: $title | Author: $author | Size: $fileSizeMB MB | Price: \$$price';
+  }
+}
+
+class ShoppingCart {
+  List<MediaItem> _items = [];
+
+  void addItem(MediaItem item) {
+    _items.add(item);
+    print('Added to cart: ${item.title}');
+  }
+
+  double calculateTotalWithTax({double taxRate = 0.12}) {
+    double subtotal = _items.fold(0.0, (sum, item) => sum + item.price);
+    return subtotal + (subtotal * taxRate);
+  }
+
+  List<MediaItem> filterByMaxPrice(double maxPrice) {
+    return _items.where((item) => item.price <= maxPrice).toList();
+  }
+
+  void printReceipt() {
+    print('\n========== RECEIPT ==========');
+    for (MediaItem item in _items) {
+      print(item.getDetails());
+      
+      if (item is Downloadable) {
+        (item as Downloadable).download(item.title);
+      }
+      print('-----------------------------');
+    }
+    
+    double finalTotal = calculateTotalWithTax();
+    print('TOTAL (with 12% tax): \$${finalTotal.toStringAsFixed(2)}');
+    print('=============================');
+  }
+}
+
+void main() {
+  ShoppingCart cart = ShoppingCart();
+
+  Audiobook audio1 = Audiobook(
+    id: 'A001',
+    title: 'Atomic Habits',
+    price: 15.99,
+    durationHours: 5.5,
+    narrator: 'James Clear',
+  );
+
+  EBook ebook1 = EBook(
+    id: 'E001',
+    title: 'Dart for Beginners',
+    price: 9.99,
+    fileSizeMB: 2.4,
+    author: 'Azamat',
+  );
+
+  EBook ebook2 = EBook(
+    id: 'E002',
+    title: 'Advanced Flutter',
+    price: 25.50,
+    fileSizeMB: 15.0,
+    author: 'Google',
+  );
+
+  cart.addItem(audio1);
+  cart.addItem(ebook1);
+  cart.addItem(ebook2);
+
+  print('\n--- Filtering items under \$20 ---');
+  List<MediaItem> cheapItems = cart.filterByMaxPrice(20.0);
+  for (MediaItem item in cheapItems) {
+    print('- ${item.title} (\$$item.price)');
+  }
+
+  cart.printReceipt();
+}
