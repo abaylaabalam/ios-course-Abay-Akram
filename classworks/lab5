@@ -1,0 +1,147 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: ProductDetailScreen(),
+    );
+  }
+}
+
+class ProductDetailScreen extends StatefulWidget {
+  const ProductDetailScreen({super.key});
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  bool isBookmarked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Product Details'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 250,
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 250,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.image, size: 100, color: Colors.grey),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: IconButton(
+                      icon: Icon(
+                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isBookmarked = !isBookmarked;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Wireless Headphones',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const Icon(Icons.star, color: Colors.amber),
+                      const Text('4.8'),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    '\$299.99',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Categories',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: [
+                      Chip(label: Text('Electronics')),
+                      Chip(label: Text('Audio')),
+                      Chip(label: Text('Wireless')),
+                      Chip(label: Text('Bluetooth')),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Description',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Good quality wireless headphones with noise cancellation and long battery life.',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.favorite_border),
+              onPressed: () {},
+            ),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Text('Add to Cart'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
